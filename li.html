@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Heritage Explorer - Dark Theme</title>
+    <style>
+        /* Reset and base */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: #12131b;
+            color: #d1d4dc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Animated Background Particles */
+        
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+        }
+        
+        .particle {
+            position: absolute;
+            background: #ffffff33;
+            border-radius: 50%;
+            animation-name: float, fadeInOut;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+            animation-delay: var(--delay);
+            animation-duration: var(--duration);
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(40px, -90px);
+            }
+            50% {
+                transform: translate(-35px, -50px);
+            }
+            75% {
+                transform: translate(60px, -140px);
+            }
+        }
+        
+        @keyframes fadeInOut {
+            0%,
+            100% {
+                opacity: 0.1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        /* Navbar */
+        
+        .navbar {
+            background: #1e1f2acc;
+            backdrop-filter: blur(12px);
+            padding: 1.3rem 0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.75);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 1.3rem;
+            flex-wrap: wrap;
+        }
+        
+        .navbar a {
+            color: #928fb3;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 0.85rem 1.6rem;
+            border-radius: 30px;
+            transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1), background 0.35s cubic-bezier(0.23, 1, 0.32, 1), color 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .navbar a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -110%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 0;
+        }
+        
+        .navbar a:hover::before {
+            left: 110%;
+        }
+        
+        .navbar a:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 22px rgba(102, 126, 234, 0.65);
+            z-index: 1;
+        }
+        
+        .navbar a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 22px rgba(102, 126, 234, 0.65);
+            transform: translateY(-2px);
+        }
+        /* Tab Content */
+        
+        .tab-content {
+            flex-grow: 1;
+            padding: 2.5rem 3rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        section {
+            display: none;
+            animation: fadeInSlide 0.75s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: #1e1f2a;
+            border-radius: 22px;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 14px 54px rgba(0, 0, 0, 0.65);
+        }
+        
+        section.active {
+            display: block;
+        }
+        
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #a9b0f7;
+            margin-bottom: 1.75rem;
+            font-size: 2.8rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInLeft 0.75s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-55px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        /* Gallery Grid */
+        
+        #galleryGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        .card {
+            background: #2e2f44;
+            border-radius: 20px;
+            box-shadow: 0 7px 26px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            transition: transform 0.5s cubic-bezier(0.645, 0.045, 0.355, 1), box-shadow 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+            animation: scaleIn 0.6s ease forwards;
+            position: relative;
+        }
+        
+        .card:nth-child(1) {
+            animation-delay: 0.12s;
+        }
+        
+        .card:nth-child(2) {
+            animation-delay: 0.24s;
+        }
+        
+        .card:nth-child(3) {
+            animation-delay: 0.36s;
+        }
+        
+        .card:nth-child(4) {
+            animation-delay: 0.48s;
+        }
+        
+        .card:nth-child(5) {
+            animation-delay: 0.6s;
+        }
+        
+        .card:nth-child(6) {
+            animation-delay: 0.72s;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .card:hover {
+            transform: translateY(-14px) scale(1.07);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.85);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -110%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: left;
+        }
+        
+        .card:hover::before {
+            left: 110%;
+        }
+        
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .card:hover img {
+            transform: scale(1.12);
+        }
+        
+        .card-body {
+            padding: 1.5rem 1.8rem;
+        }
+        
+        .card-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #a9b0f7;
+            font-size: 1.25rem;
+        }
+        
+        .card-text {
+            font-size: 1rem;
+            color: #bbb;
+            margin-bottom: 1.5rem;
+            line-height: 1.65;
+        }
+        
+        .download-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.8rem;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 30px;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.6);
+        }
+        
+        .download-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(102, 126, 234, 0.8);
+        }
+        /* Filter and Search */
+        
+        .controls {
+            display: flex;
+            gap: 1.3rem;
+            margin-bottom: 2.2rem;
+            flex-wrap: wrap;
+            animation: slideInLeft 0.85s cubic-bezier(0.25, 0.8, 0.25, 1) backwards;
+        }
+        
+        .controls label {
+            font-weight: 600;
+            color: #a9b0f7;
+            display: flex;
+            align-items: center;
+        }
+        
+        .controls select,
+        .controls input {
+            padding: 0.75rem 1.2rem;
+            border: 2.4px solid #44475a;
+            border-radius: 35px;
+            font-size: 1.1rem;
+            transition: all 0.35s ease;
+            outline-offset: 3px;
+            background: #282c3a;
+            color: #d1d4dc;
+        }
+        
+        .controls select:focus,
+        .controls input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.4);
+            background: #323756;
+        }
+        /* Quiz Styles */
+        
+        .quiz-question {
+            margin-bottom: 2.3rem;
+            padding: 1.6rem 2rem;
+            background: #23253a;
+            border-radius: 20px;
+            animation: slideInLeft 0.76s cubic-bezier(0.25, 0.8, 0.25, 1) backwards;
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.28);
+        }
+        
+        .quiz-question:nth-child(1) {
+            animation-delay: 0.12s;
+        }
+        
+        .quiz-question:nth-child(2) {
+            animation-delay: 0.24s;
+        }
+        
+        .quiz-question:nth-child(3) {
+            animation-delay: 0.36s;
+        }
+        
+        .quiz-question h3 {
+            color: #a9b0f7;
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-options {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .quiz-options li {
+            margin-bottom: 0.92rem;
+            transition: transform 0.24s ease;
+        }
+        
+        .quiz-options li:hover {
+            transform: translateX(5px);
+        }
+        
+        .quiz-options label {
+            cursor: pointer;
+            padding: 0.56rem 0.9rem;
+            display: block;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+            color: #d1d4dc;
+        }
+        
+        .quiz-options label:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        button#submitBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.15rem;
+            transition: all 0.35s ease;
+            box-shadow: 0 6px 22px rgba(102, 126, 234, 0.45);
+            margin-top: 1.4rem;
+        }
+        
+        button#submitBtn:hover {
+            transform: translateY(-3.5px);
+            box-shadow: 0 11px 30px rgba(102, 126, 234, 0.7);
+        }
+        
+        button#submitBtn:active {
+            transform: translateY(-1.5px);
+        }
+        
+        #result {
+            margin-top: 1.7rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #a9b0f7;
+            text-align: center;
+            animation: bounceIn 0.65s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        /* 3D Viewer */
+        
+        #viewer {
+            width: 100%;
+            height: 520px;
+            border-radius: 20px;
+            margin-top: 1.7rem;
+            background: linear-gradient(135deg, #23253a 0%, #2e2f44 100%);
+            box-shadow: inset 0 3px 18px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            animation: scaleIn 0.6s ease both;
+        }
+        
+        .model-controls {
+            display: flex;
+            gap: 1.3rem;
+            align-items: center;
+            flex-wrap: wrap;
+            animation: slideInLeft 0.75s ease both;
+            font-weight: 600;
+            color: #a9b0f7;
+        }
+        
+        .model-controls label {
+            flex-shrink: 0;
+        }
+        
+        .model-controls select {
+            padding: 0.85rem 1.5rem;
+            border: 2.5px solid #44475a;
+            border-radius: 35px;
+            font-size: 1.05rem;
+            transition: all 0.33s ease;
+            outline-offset: 5px;
+            background: #1f2130;
+            color: #d1d4dc;
+        }
+        
+        .model-controls select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.25);
+            background: #2a2c3f;
+        }
+        
+        .model-controls button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 35px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.33s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .model-controls button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 25px rgba(102, 126, 234, 0.9);
+        }
+        
+        .model-controls button:disabled {
+            opacity: 0.48;
+            cursor: not-allowed;
+        }
+        /* Archive Section */
+        
+        .archive-item {
+            margin-bottom: 2.2rem;
+            padding: 1.7rem 2rem;
+            background: #23253a;
+            border-radius: 20px;
+            animation: slideInLeft 0.75s cubic-bezier(0.25, 0.8, 0.25, 1) backwards;
+            transition: transform 0.38s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+        }
+        
+        .archive-item:nth-child(1) {
+            animation-delay: 0.12s;
+        }
+        
+        .archive-item:nth-child(2) {
+            animation-delay: 0.26s;
+        }
+        
+        .archive-item:nth-child(3) {
+            animation-delay: 0.42s;
+        }
+        
+        .archive-item:hover {
+            transform: translateX(14px);
+        }
+        
+        .archive-item h3 {
+            color: #a9b0f7;
+            margin-bottom: 0.9rem;
+        }
+        
+        .archive-item p {
+            color: #bbb;
+            line-height: 1.7;
+        }
+        /* Home Section */
+        
+        .home-content {
+            text-align: center;
+            padding: 3.2rem 1rem;
+        }
+        
+        .home-content p {
+            font-size: 1.28rem;
+            color: #babbd9;
+            max-width: 780px;
+            margin: 0 auto;
+            line-height: 1.9;
+            animation: fadeIn 0.9s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* VR Section */
+        
+        #vrVideoContainer {
+            margin-top: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        #vrUploader {
+            padding: 0.75rem 1.4rem;
+            border: 2.5px solid #44475a;
+            border-radius: 35px;
+            font-size: 1rem;
+            background: #1f2130;
+            color: #d1d4dc;
+            cursor: pointer;
+            transition: all 0.35s ease;
+        }
+        
+        #vrUploader:hover {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        
+        #vrVideo {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.65);
+        }
+        /* Hampi Submenu */
+        
+        .hampi-submenu {
+            display: none;
+            position: absolute;
+            background: #1e1f2acc;
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            min-width: 200px;
+            z-index: 1001;
+        }
+        
+        .hampi-menu-item {
+            position: relative;
+        }
+        
+        .hampi-menu-item:hover .hampi-submenu {
+            display: block;
+        }
+        
+        .hampi-submenu a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #928fb3;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0.25rem 0.5rem;
+        }
+        
+        .hampi-submenu a:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .navbar ul {
+                gap: 0.6rem;
+            }
+            .navbar a {
+                padding: 0.65rem 1.2rem;
+                font-size: 0.95rem;
+            }
+            h1 {
+                font-size: 2.25rem;
+            }
+            section {
+                padding: 1.6rem 2rem;
+                border-radius: 14px;
+            }
+            #viewer {
+                height: 380px;
+                border-radius: 14px;
+            }
+            .hampi-submenu {
+                position: relative;
+                margin-top: 0.5rem;
+            }
+            .hampi-menu-item:hover .hampi-submenu {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="particles"></div>
+
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <ul>
+            <li><a href="#index" class="active" data-tab="index" aria-current="page">🏛️ Home</a></li>
+            <li class="hampi-menu-item">
+                <a href="#hampi-home" data-tab="hampi-home">🕌 Hampi</a>
+                <div class="hampi-submenu">
+                    <a href="#hampi-archive" data-tab="hampi-archive">📜 Archive</a>
+                    <a href="#hampi-models" data-tab="hampi-models">🎨 3D Models</a>
+                    <a href="#hampi-quiz" data-tab="hampi-quiz">🧩 Quiz</a>
+                    <a href="#hampi-vr" data-tab="hampi-vr">🌐 VR Section</a>
+                    <a href="#hampi-gallery" data-tab="hampi-gallery">🖼️ Gallery</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="tab-content">
+        <!-- Main Home Section -->
+        <section id="index" class="active" tabindex="0" aria-label="Home section">
+            <div class="home-content">
+                <h1>Welcome to Heritage Explorer</h1>
+                <p>Embark on a journey through time and culture. Explore ancient artifacts, medieval manuscripts, and timeless treasures that tell the story of human civilization. Our digital collection brings history to life through interactive 3D models,
+                    detailed archives, and engaging educational content.</p>
+            </div>
+        </section>
+
+        <!-- Hampi Home Section -->
+        <section id="hampi-home" tabindex="0" aria-label="Hampi home section">
+            <div class="home-content">
+                <h1>Welcome to Hampi Heritage</h1>
+                <p>Discover the magnificent ruins of Hampi, Karnataka - a cultural and architectural heritage site built more than 200 years ago. Once the capital of the Vijayanagara Empire, this UNESCO World Heritage Site showcases stunning temples, ancient
+                    monuments, and architectural marvels that tell the story of India's glorious past.</p>
+            </div>
+        </section>
+
+        <!-- Hampi Archive Section -->
+        <section id="hampi-archive" tabindex="0" aria-label="Hampi archive section">
+            <h1>📜 Hampi Monuments Archive</h1>
+            <p style="text-align: center; color: #aaa; margin-bottom: 2rem;">Explore the architectural treasures of Hampi, Karnataka.</p>
+            <div>
+                <article class="archive-item" tabindex="0">
+                    <h3>Virupaksha Temple</h3>
+                    <p>The principal temple dedicated to Lord Shiva, featuring a magnificent 9-tiered gopuram tower and intricate carvings that showcase the architectural brilliance of the Vijayanagara Empire.</p>
+                </article>
+                <article class="archive-item" tabindex="0">
+                    <h3>Vittala Temple Complex</h3>
+                    <p>Famous for its exceptional architecture and the iconic stone chariot. The musical pillars of this temple produce different musical notes when tapped, demonstrating ancient engineering genius.</p>
+                </article>
+                <article class="archive-item" tabindex="0">
+                    <h3>Lotus Mahal</h3>
+                    <p>An exquisite palatial structure in the Zenana enclosure, combining Indo-Islamic architectural styles with its unique lotus-shaped domed pavilion.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Hampi Models Section -->
+        <section id="hampi-models" tabindex="0" aria-label="Hampi 3D Models section">
+            <h1>🎨 Hampi 3D Models Viewer</h1>
+            <div class="model-controls">
+                <label for="hampiModelSelect">Select Model:</label>
+                <select id="hampiModelSelect" aria-controls="hampiViewer" aria-label="Select a 3D model to display"></select>
+                <button id="hampiDownloadBtn" disabled aria-disabled="true">Download Model</button>
+            </div>
+            <div id="hampiViewer" role="region" aria-live="polite" aria-label="3D model viewer"></div>
+        </section>
+
+        <!-- Hampi Quiz Section -->
+        <section id="hampi-quiz" tabindex="0" aria-label="Hampi quiz section">
+            <h1>🧩 Hampi Heritage Quiz</h1>
+            <form id="hampiQuizContainer" aria-live="polite" aria-relevant="additions" aria-atomic="true"></form>
+            <button id="hampiSubmitBtn">Submit Answers</button>
+            <div id="hampiResult" aria-live="polite" role="alert"></div>
+        </section>
+
+        <!-- Hampi VR Section -->
+        <section id="hampi-vr" tabindex="0" aria-label="Hampi VR section">
+            <h1>🌐 Hampi VR Experience</h1>
+            <div id="hampiVrVideoContainer">
+                <input type="file" id="hampiVrUploader" accept="video/*" aria-label="Upload VR video" />
+                <video id="hampiVrVideo" controls aria-label="Uploaded VR video preview" style="display:none;"></video>
+            </div>
+        </section>
+
+        <!-- Hampi Gallery Section -->
+        <section id="hampi-gallery" tabindex="0" aria-label="Hampi gallery section">
+            <h1>🖼️ Hampi Gallery</h1>
+            <div class="controls">
+                <label for="hampiSearchInput">Search:</label>
+                <input type="text" id="hampiSearchInput" placeholder="Search gallery..." aria-label="Search gallery items" />
+            </div>
+            <div id="hampiGalleryGrid"></div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/OBJLoader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/STLLoader.min.js"></script>
+
+    <script>
+        // Animated background particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = particle.style.height = `${Math.random() * 5 + 3}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.setProperty('--delay', `${Math.random() * 20}s`);
+            particle.style.setProperty('--duration', `${Math.random() * 15 + 20}s`);
+            particlesContainer.appendChild(particle);
+        }
+
+        // Navigation Tabs control with focus management
+        document.querySelectorAll('.navbar a').forEach(tabLink => {
+            tabLink.addEventListener('click', e => {
+                e.preventDefault();
+                const target = tabLink.dataset.tab;
+                if (target) {
+                    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+                    document.querySelectorAll('.navbar a').forEach(a => a.classList.remove('active'));
+                    const targetSection = document.getElementById(target);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        tabLink.classList.add('active');
+                        targetSection.focus();
+                    }
+                }
+            });
+        });
+
+        // Submenu navigation
+        document.querySelectorAll('.hampi-submenu a').forEach(subLink => {
+            subLink.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const target = subLink.dataset.tab;
+                if (target) {
+                    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+                    document.querySelectorAll('.navbar a').forEach(a => a.classList.remove('active'));
+                    const targetSection = document.getElementById(target);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        targetSection.focus();
+                    }
+                }
+            });
+        });
+
+        /* Hampi Gallery */
+        const hampiArchiveItems = [{
+            id: 1,
+            title: "Stone Chariot at Vittala Temple",
+            description: "The iconic stone chariot structure, a symbol of Hampi's architectural magnificence.",
+            filename: "https://www.google.com/imgres?q=stone%20chariot%20at%20vittala%20temple&imgurl=https%3A%2F%2Fs7ap1.scene7.com%2Fis%2Fimage%2Fincredibleindia%2Fvittala-temple-hampi-karnataka-3-attr-hero%3Fqlt%3D82%26ts%3D1726721364446&imgrefurl=https%3A%2F%2Fwww.incredibleindia.gov.in%2Fen%2Fkarnataka%2Fhampi%2Fvitthala-temple-complex&docid=mXADeQrxyqBbWM&tbnid=569283Ndwv4h_M&vet=12ahUKEwiBwN6ywYSRAxUFR2wGHTTTO48QM3oECB0QAA..i&w=1280&h=720&hcb=2&ved=2ahUKEwiBwN6ywYSRAxUFR2wGHTTTO48QM3oECB0QAA"
+        }, {
+            id: 2,
+            title: "Virupaksha Temple Gopuram",
+            description: "The towering temple entrance with intricate Dravidian architectural details.",
+            filename: "https://www.google.com/imgres?q=virupaksha%20temple.jpg&imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2F2%2F21%2FVirupaksha_temple%252C_Hampi_02.jpg&imgrefurl=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AVirupaksha_temple%2C_Hampi_02.jpg&docid=-7Rae50hXGdhiM&tbnid=LaP4zfh4nBawAM&vet=12ahUKEwjciombwYSRAxXzSGwGHdIaLb0QM3oECBAQAA..i&w=1620&h=1080&hcb=2&ved=2ahUKEwjciombwYSRAxXzSGwGHdIaLb0QM3oECBAQAA"
+        }, {
+            id: 3,
+            title: "Hampi Bazaar Street",
+            description: "Ancient marketplace ruins showcasing the vibrant commercial life of the Vijayanagara Empire.",
+            filename: "https://www.google.com/imgres?q=hampi%20bazaar.jpg&imgurl=https%3A%2F%2Ft4.ftcdn.net%2Fjpg%2F04%2F44%2F21%2F97%2F360_F_444219751_ncxNq6Agg622sSD114ryEKI91lpmeqDV.jpg&imgrefurl=https%3A%2F%2Fstock.adobe.com%2Fsearch%3Fk%3D%2522hampi%2Bbazaar%2522&docid=GMTU9QZebtqltM&tbnid=DQ1K3uQbNn2UtM&vet=12ahUKEwjR-8-JwYSRAxUtV2wGHY1qIJIQM3oECBUQAA..i&w=539&h=360&hcb=2&ved=2ahUKEwjR-8-JwYSRAxUtV2wGHY1qIJIQM3oECBUQAA"
+        }, {
+            id: 4,
+            title: "Lotus Mahal Palace",
+            description: "A stunning Indo-Islamic palace structure in the Zenana enclosure.",
+            filename: "https://www.google.com/imgres?q=lotus%20mahal%20hampi&imgurl=https%3A%2F%2Fs7ap1.scene7.com%2Fis%2Fimage%2Fincredibleindia%2Flotus-mahal-hampi-karnataka-1-attr-hero%3Fqlt%3D82%26ts%3D1726721386590&imgrefurl=https%3A%2F%2Fwww.incredibleindia.gov.in%2Fen%2Fkarnataka%2Fhampi%2Flotus-mahal&docid=YOIVIiLy6iO8EM&tbnid=OAyC9sXizRmzAM&vet=12ahUKEwi9z5_2wISRAxXkR2wGHQRwEvMQM3oECBYQAA..i&w=1280&h=720&hcb=2&ved=2ahUKEwi9z5_2wISRAxXkR2wGHQRwEvMQM3oECBYQAA"
+        }, {
+            id: 5,
+            title: "Hemakuta Hill Temples",
+            description: "A cluster of ancient Shiva temples offering panoramic views of Hampi.",
+            filename: "https://www.google.com/imgres?q=hemakuta%20temple.jpg&imgurl=https%3A%2F%2Fdynamic-media-cdn.tripadvisor.com%2Fmedia%2Fphoto-o%2F07%2F82%2F22%2F41%2Fhemakuta-hill-temple.jpg%3Fw%3D1200%26h%3D1200%26s%3D1&imgrefurl=https%3A%2F%2Fwww.tripadvisor.in%2FAttraction_Review-g319725-d3912995-Reviews-Hemakuta_Hill_Temple_Complex-Hampi_Bellary_District_Karnataka.html&docid=tr6ihoYw381MxM&tbnid=t1yo5TA2f_pRdM&vet=12ahUKEwjwkYXfwISRAxX-a2wGHZOeFakQM3oECBEQAA..i&w=993&h=1200&hcb=2&ved=2ahUKEwjwkYXfwISRAxX-a2wGHZOeFakQM3oECBEQAA"
+        }, {
+            id: 6,
+            title: "Tungabhadra River View",
+            description: "The sacred river flowing through the boulder-strewn landscape of Hampi.",
+            filename: "https://www.google.com/imgres?q=tungabhadra%20river.jpg&imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2F3%2F3b%2FHampi%252C_Tungabhadra_River%252C_India.jpg&imgrefurl=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTungabhadra_River&docid=YzdkFkclNyd2IM&tbnid=Oi0KYLzDk9ceWM&vet=12ahUKEwjDsNC-u4SRAxV9RmwGHSnvAnAQM3oECBEQAA..i&w=4032&h=2688&hcb=2&ved=2ahUKEwjDsNC-u4SRAxV9RmwGHSnvAnAQM3oECBEQAA"
+        }];
+
+        const hampiGalleryGrid = document.getElementById("hampiGalleryGrid");
+        const hampiSearchInput = document.getElementById("hampiSearchInput");
+
+        function renderHampiGallery() {
+            const searchTerm = hampiSearchInput.value.toLowerCase();
+            hampiGalleryGrid.innerHTML = "";
+
+            const filtered = hampiArchiveItems.filter(item => {
+                return item.title.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm);
+            });
+
+            filtered.forEach(item => {
+                const card = document.createElement("div");
+                card.classList.add("card");
+
+                const img = document.createElement("img");
+                img.src = item.filename;
+                img.alt = item.title;
+                card.appendChild(img);
+
+                const body = document.createElement("div");
+                body.classList.add("card-body");
+
+                const title = document.createElement("h4");
+                title.classList.add("card-title");
+                title.textContent = item.title;
+                body.appendChild(title);
+
+                const desc = document.createElement("p");
+                desc.classList.add("card-text");
+                desc.textContent = item.description;
+                body.appendChild(desc);
+
+                const downloadLink = document.createElement("a");
+                downloadLink.classList.add("download-link");
+                downloadLink.href = item.filename;
+                downloadLink.download = item.filename;
+                downloadLink.textContent = "Download";
+                body.appendChild(downloadLink);
+
+                card.appendChild(body);
+                hampiGalleryGrid.appendChild(card);
+            });
+        }
+
+        hampiSearchInput.addEventListener("input", renderHampiGallery);
+        renderHampiGallery();
+
+        /* Hampi Quiz */
+        const hampiQuizData = [{
+            question: "Which empire built the magnificent city of Hampi?",
+            options: ["Vijayanagara Empire", "Mughal Empire", "Chola Empire", "Maurya Empire"],
+            answer: "Vijayanagara Empire"
+        }, {
+            question: "What is the famous musical feature of Vittala Temple?",
+            options: ["Musical pillars", "Echo chambers", "Wind chimes", "Temple bells"],
+            answer: "Musical pillars"
+        }, {
+            question: "Which river flows through Hampi?",
+            options: ["Tungabhadra", "Ganges", "Kaveri", "Godavari"],
+            answer: "Tungabhadra"
+        }];
+
+        const hampiQuizContainer = document.getElementById("hampiQuizContainer");
+        const hampiSubmitBtn = document.getElementById("hampiSubmitBtn");
+        const hampiResult = document.getElementById("hampiResult");
+
+        function buildHampiQuiz() {
+            const output = hampiQuizData.map((item, index) => {
+                const optionsHTML = item.options
+                    .map(opt => `<li><label><input type="radio" name="hampiQuestion${index}" value="${opt}" /> ${opt}</label></li>`)
+                    .join("");
+                return `<div class="quiz-question" style="animation-delay:${0.1 + index * 0.12}s;">
+          <h3>${item.question}</h3>
+          <ul class="quiz-options">${optionsHTML}</ul>
+        </div>`;
+            });
+            hampiQuizContainer.innerHTML = output.join("");
+        }
+
+        function showHampiResults() {
+            let score = 0;
+            hampiQuizData.forEach((item, index) => {
+                const selector = `input[name=hampiQuestion${index}]:checked`;
+                const selected = (document.querySelector(selector) || {}).value;
+                if (selected === item.answer) score++;
+            });
+            hampiResult.textContent = `🎉 You scored ${score} out of ${hampiQuizData.length}!`;
+        }
+
+        hampiSubmitBtn.addEventListener("click", e => {
+            e.preventDefault();
+            showHampiResults();
+        });
+
+        buildHampiQuiz();
+
+        /* Hampi 3D Models Viewer */
+        const hampiModels = [{
+            name: "Virupaksha Temple (OBJ)",
+            filename: "virupaksha_temple.obj",
+            type: "obj"
+        }, {
+            name: "Stone Chariot (STL)",
+            filename: "stone_chariot.stl",
+            type: "stl"
+        }, {
+            name: "Lotus Mahal (OBJ)",
+            filename: "lotus_mahal.obj",
+            type: "obj"
+        }];
+
+        const hampiModelSelect = document.getElementById("hampiModelSelect");
+        const hampiViewer = document.getElementById("hampiViewer");
+        const hampiDownloadBtn = document.getElementById("hampiDownloadBtn");
+        let hampiScene, hampiCamera, hampiRenderer, hampiControls, hampiCurrentModel;
+
+        function initHampiThreeJs() {
+            hampiScene = new THREE.Scene();
+            hampiScene.background = new THREE.Color(0x222233);
+
+            hampiCamera = new THREE.PerspectiveCamera(45, hampiViewer.clientWidth / hampiViewer.clientHeight, 0.1, 1000);
+            hampiCamera.position.set(0, 0, 5);
+
+            hampiRenderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true
+            });
+            hampiRenderer.setSize(hampiViewer.clientWidth, hampiViewer.clientHeight);
+            hampiViewer.innerHTML = "";
+            hampiViewer.appendChild(hampiRenderer.domElement);
+
+            hampiControls = new THREE.OrbitControls(hampiCamera, hampiRenderer.domElement);
+            hampiControls.enableDamping = true;
+
+            const ambientLight = new THREE.AmbientLight(0xcccccc, 0.5);
+            hampiScene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            directionalLight.position.set(1, 1, 1).normalize();
+            hampiScene.add(directionalLight);
+
+            animateHampi();
+        }
+
+        function animateHampi() {
+            requestAnimationFrame(animateHampi);
+            hampiControls.update();
+            hampiRenderer.render(hampiScene, hampiCamera);
+        }
+
+        function loadHampiModel(url, type) {
+            if (hampiCurrentModel) {
+                hampiScene.remove(hampiCurrentModel);
+                if (hampiCurrentModel.geometry) hampiCurrentModel.geometry.dispose();
+                if (hampiCurrentModel.material) hampiCurrentModel.material.dispose();
+                hampiCurrentModel = null;
+            }
+
+            const onLoad = function(object) {
+                hampiCurrentModel = object;
+                hampiScene.add(object);
+            };
+
+            if (type === "obj") {
+                const loader = new THREE.OBJLoader();
+                loader.load(url, onLoad);
+            } else if (type === "stl") {
+                const loader = new THREE.STLLoader();
+                loader.load(url, geometry => {
+                    const material = new THREE.MeshPhongMaterial({
+                        color: 0x606060
+                    });
+                    const mesh = new THREE.Mesh(geometry, material);
+                    onLoad(mesh);
+                });
+            }
+        }
+
+        function populateHampiModelSelect() {
+            hampiModels.forEach((model, index) => {
+                const option = document.createElement("option");
+                option.value = index;
+                option.textContent = model.name;
+                hampiModelSelect.appendChild(option);
+            });
+        }
+
+        hampiModelSelect.addEventListener("change", () => {
+            const selectedModel = hampiModels[hampiModelSelect.value];
+            if (selectedModel) {
+                loadHampiModel(selectedModel.filename, selectedModel.type);
+                hampiDownloadBtn.disabled = false;
+                hampiDownloadBtn.href = selectedModel.filename;
+                hampiDownloadBtn.download = selectedModel.filename;
+            } else {
+                hampiDownloadBtn.disabled = true;
+                hampiDownloadBtn.href = "#";
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (hampiRenderer && hampiCamera) {
+                hampiCamera.aspect = hampiViewer.clientWidth / hampiViewer.clientHeight;
+                hampiCamera.updateProjectionMatrix();
+                hampiRenderer.setSize(hampiViewer.clientWidth, hampiViewer.clientHeight);
+            }
+        });
+
+        initHampiThreeJs();
+        populateHampiModelSelect();
+
+        // Hampi VR Video upload and preview
+        const hampiVrUploader = document.getElementById('hampiVrUploader');
+        const hampiVrVideo = document.getElementById('hampiVrVideo');
+
+        hampiVrUploader.addEventListener('change', event => {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                hampiVrVideo.src = url;
+                hampiVrVideo.style.display = 'block';
+                hampiVrVideo.load();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
